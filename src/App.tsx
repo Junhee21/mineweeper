@@ -1,15 +1,17 @@
-import React from 'react';
+import { useSelector } from "react-redux";
+import { RootState } from "./app/store";
 import Game from './app/game';
 import Topbar from './app/topbar';
-import './App.css';
+import SetDifficulty from './app/setDifficulty';
+import './App.scss';
 
-function App() {
+export default function App() {
+  const boolSetDifficulty = useSelector((state: RootState) => state.game.boolSetDifficulty)
   return (
     <div className="App">
       <Topbar />
       <Game />
+      {boolSetDifficulty && <SetDifficulty />}
     </div>
   );
 }
-
-export default App;

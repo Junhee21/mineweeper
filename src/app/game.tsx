@@ -1,16 +1,20 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateArr, incrementMines, decrementMines, 
-  incrementAnswers, decrementAnswers, Square } from "./gameSlice";
+import {
+  updateArr, incrementMines, decrementMines,
+  incrementAnswers, decrementAnswers, Square
+} from "./gameSlice";
 import { RootState } from "./store";
-import './app.scss'
+import classnames from 'classnames';
+import '../App.scss'
 
 export default function Game() {
+  const dispatch = useDispatch();
+  const boolNewGame = useSelector((state: RootState) => state.game.boolNewGame)
   const mines = useSelector((state: RootState) => state.game.mines)
   const arr = useSelector((state: RootState) => state.game.arr)
   const rows = useSelector((state: RootState) => state.game.rows)
   const columns = useSelector((state: RootState) => state.game.columns)
-  const dispatch = useDispatch();
   const totalSquare: number = columns * rows;
   const dir: Array<Array<number>> = [
     [-1, 0],
@@ -59,26 +63,28 @@ export default function Game() {
     })
 
     dispatch(updateArr(cp));
-  }, [])
+  }, [boolNewGame])
 
   const handleRightClick = (e: React.MouseEvent<HTMLDivElement>, r: number, c: number) => {
     e.preventDefault();
-    const cp: Array<Array<Square>> = JSON.parse(JSON.stringify(arr));
-    if (!cp[r][c].checkMine) {
-      dispatch(decrementMines());
-      cp[r]
-      [c].checkMine = true;
-      if (cp[r][c].mine === -1) {
-        dispatch(decrementAnswers());  
+    if (!arr[r][c].explore) {
+      const cp: Array<Array<Square>> = JSON.parse(JSON.stringify(arr));
+      if (!cp[r][c].checkMine) {
+        dispatch(decrementMines());
+        cp[r]
+        [c].checkMine = true;
+        if (cp[r][c].mine === -1) {
+          dispatch(decrementAnswers());
+        }
+      } else {
+        dispatch(incrementMines());
+        cp[r][c].checkMine = false;
+        if (cp[r][c].mine === -1) {
+          dispatch(incrementAnswers());
+        }
       }
-    } else {
-      dispatch(incrementMines());
-      cp[r][c].checkMine = false;
-      if (cp[r][c].mine === -1) {
-        dispatch(incrementAnswers());
-      }
+      dispatch(updateArr(cp));
     }
-    dispatch(updateArr(cp));
   }
 
   const handleClick = (r: number, c: number) => {
@@ -102,7 +108,6 @@ export default function Game() {
     for (let i = 0; i < 8; i++) {
       let r1: number = r + dir[i][0];
       let c1: number = c + dir[i][1];
-      console.log(dir[i][0]);
       if ((r1 >= 0) && (r1 < rows) && (c1 >= 0) && (c1 < columns) && (!cp[r1][c1].explore)) {
         if (cp[r1][c1].mine === 0) {
           explore(cp, r1, c1);
@@ -115,32 +120,37 @@ export default function Game() {
   }
 
   return (
-    <div>
-      <div className="grid">
-        {arr.map((row, indexRow) => {
-          return (
-            row.map((col, indexCol) => {
-              if (arr[indexRow][indexCol].explore) {
-                return (<div className="red" >{arr[indexRow][indexCol].mine}</div>)
-              } else if (!arr[indexRow][indexCol].explore) {
+    <div className="game">
+      {arr.map((row, indexRow) => {
+        return (
+          <div
+            className="row"
+            key={indexRow}
+          >
+            {
+              row.map((col, indexCol) => {
                 return (
                   <div
-                    key={indexRow * 1000 + indexCol}
-                    className="item"
+                    key={indexCol}
+                    className={classnames(
+                      'item', 'borderRightBottom',
+                      (indexRow === 0) ? 'borderTop' : '',
+                      (indexCol === 0) ? 'borderLeft' : '',
+                      (arr[indexRow][indexCol].explore) ? 'gray' : '',
+                      (arr[indexRow][indexCol].checkMine) ? 'red' : '',
+                    )}
                     onClick={() => handleClick(indexRow, indexCol)}
                     onContextMenu={(e) => handleRightClick(e, indexRow, indexCol)}
                   >
                     {arr[indexRow][indexCol].mine}
                   </div>
                 )
-              } if (arr[indexRow][indexCol].checkMine) {
-                return (<div className="green" >{arr[indexRow][indexCol].mine}</div>)
-              }
-            })
-          )
-        })}
-      </div>
-      <button onClick={() => console.log(arr)}>
+              })
+            }
+          </div>
+        )
+      })}
+      <button onClick={() => console.log(mines)}>
         sd
       </button>
     </div>
