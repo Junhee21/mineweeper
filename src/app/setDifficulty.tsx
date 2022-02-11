@@ -8,7 +8,7 @@ export default function SetDifficulty() {
   const [difficulty, setDifficulty] = useState("")
   const [rows, setRows] = useState("20")
   const [columns, setColumns] = useState("30")
-  const [mines, setMines] = useState("145")
+  const [startMines, setMines] = useState("145")
 
   const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -18,7 +18,7 @@ export default function SetDifficulty() {
     if (difficulty) {
       if (difficulty === "쉬움") {
         dispatch(newGame({
-          mines: 10,
+          startMines: 10,
           answers: 81,
           rows: 9,
           columns: 9,
@@ -30,7 +30,7 @@ export default function SetDifficulty() {
         }));
       } else if (difficulty === "보통") {
         dispatch(newGame({
-          mines: 40,
+          startMines: 40,
           answers: 256,
           rows: 16,
           columns: 16,
@@ -42,7 +42,7 @@ export default function SetDifficulty() {
         }));
       } else if (difficulty === "어려움") {
         dispatch(newGame({
-          mines: 99,
+          startMines: 99,
           answers: 480,
           rows: 16,
           columns: 30,
@@ -54,7 +54,7 @@ export default function SetDifficulty() {
         }));
       } else {
         dispatch(newGame({
-          mines: Number(mines),
+          startMines: Number(startMines),
           answers: Number(rows) * Number(columns),
           rows: Number(rows),
           columns: Number(columns),
@@ -74,10 +74,7 @@ export default function SetDifficulty() {
       className="setDifficulty"
       onContextMenu={(e) => handleRightClick(e)}
     >
-      <div className="topbar">
-        <div>
-          난이도 설정
-        </div>
+      <div className="top">
         <div
           className="X"
           onClick={() => dispatch(toggleSetDifficulty())}
@@ -143,6 +140,7 @@ export default function SetDifficulty() {
         />
       </div>
       <div
+        className="buttonNewGame"
         onClick={() => handleNewGame()}
       >
         새 게임

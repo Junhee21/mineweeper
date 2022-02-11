@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface Game {
+  result: number;
   boolNewGame: boolean;
   boolSetDifficulty: boolean;
-  mines: number;
+  startMines: number;
+  nowMines: number;
   answers: number;
   rows: number;
   columns: number;
@@ -17,9 +19,11 @@ export interface Square {
 }
 
 const initialState: Game = {
+  result: 0,
   boolNewGame: false,
   boolSetDifficulty: false,
-  mines: 99,
+  startMines: 99,
+  nowMines: 99,
   answers: 480,
   rows: 16,
   columns: 30,
@@ -38,10 +42,10 @@ export const gameSlice = createSlice({
       state.arr = action.payload;
     },
     decrementMines: (state) => {
-      state.mines -= 1;
+      state.nowMines -= 1;
     },
     incrementMines: (state) => {
-      state.mines += 1;
+      state.nowMines += 1;
     },
     decrementAnswers: (state) => {
       state.answers -= 1;
@@ -53,18 +57,23 @@ export const gameSlice = createSlice({
       state.boolSetDifficulty = !state.boolSetDifficulty;
     },
     newGame: (state, action) => {
+      state.result = 0;
       state.boolNewGame = !state.boolNewGame;
-      state.mines = action.payload.mines;
+      state.startMines = action.payload.startMines;
+      state.nowMines = action.payload.startMines;
       state.answers = action.payload.answers;
       state.rows = action.payload.rows;
       state.columns = action.payload.columns;
       state.arr = action.payload.arr;
-    }
+    },
+    switchResult: (state, action) => {
+      state.result = action.payload;
+    },
   },
 });
 
 export const {
   updateArr, decrementMines, incrementMines, decrementAnswers,
-  incrementAnswers, toggleSetDifficulty, newGame
+  incrementAnswers, toggleSetDifficulty, newGame, switchResult
 } = gameSlice.actions;
 export default gameSlice.reducer;

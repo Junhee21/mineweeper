@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateArr, incrementMines, decrementMines,
-  incrementAnswers, decrementAnswers, Square
+  incrementAnswers, decrementAnswers, switchResult, Square
 } from "./gameSlice";
 import { RootState } from "./store";
 import classnames from 'classnames';
@@ -10,8 +10,10 @@ import '../App.scss'
 
 export default function Game() {
   const dispatch = useDispatch();
+  const result = useSelector((state: RootState) => state.game.result)
+  const answers = useSelector((state: RootState) => state.game.answers)
   const boolNewGame = useSelector((state: RootState) => state.game.boolNewGame)
-  const mines = useSelector((state: RootState) => state.game.mines)
+  const startMines = useSelector((state: RootState) => state.game.startMines)
   const arr = useSelector((state: RootState) => state.game.arr)
   const rows = useSelector((state: RootState) => state.game.rows)
   const columns = useSelector((state: RootState) => state.game.columns)
@@ -28,9 +30,12 @@ export default function Game() {
   ];
 
   useEffect(() => {
+    // 게임 결과 0 으로 (승리가 1, 패배가 -1, 게임중이 0)
+    dispatch(switchResult(0));
+
     // 랜덤 지뢰 정하기
     const temp: Array<number> = [];
-    for (let i: number = 0; i < mines; i++) {
+    for (let i: number = 0; i < startMines; i++) {
       let num: number = Math.floor(Math.random() * totalSquare);
       if (temp.indexOf(num) === -1) {
         temp.push(num);
@@ -65,14 +70,19 @@ export default function Game() {
     dispatch(updateArr(cp));
   }, [boolNewGame])
 
+  useEffect(() => {
+    if (answers === 0) {
+      dispatch(switchResult(1));
+    }
+  }, [answers])
+
   const handleRightClick = (e: React.MouseEvent<HTMLDivElement>, r: number, c: number) => {
     e.preventDefault();
-    if (!arr[r][c].explore) {
+    if (!arr[r][c].explore && result === 0) {
       const cp: Array<Array<Square>> = JSON.parse(JSON.stringify(arr));
       if (!cp[r][c].checkMine) {
         dispatch(decrementMines());
-        cp[r]
-        [c].checkMine = true;
+        cp[r][c].checkMine = true;
         if (cp[r][c].mine === -1) {
           dispatch(decrementAnswers());
         }
@@ -89,9 +99,13 @@ export default function Game() {
 
   const handleClick = (r: number, c: number) => {
     const cp: Array<Array<Square>> = JSON.parse(JSON.stringify(arr));
-    if (!cp[r][c].explore) {
+    if (!cp[r][c].explore && result === 0) {
+      if (cp[r][c].checkMine) {
+        cp[r][c].checkMine = false;
+        dispatch(incrementMines());
+      }
       if (cp[r][c].mine === -1) {
-        alert("실패");
+        dispatch(switchResult(-1));
       } else if (cp[r][c].mine === 0) {
         explore(cp, r, c);
       } else {
@@ -104,6 +118,10 @@ export default function Game() {
 
   const explore = (cp: Array<Array<Square>>, r: number, c: number) => {
     cp[r][c].explore = true;
+    if (cp[r][c].checkMine) {
+      cp[r][c].checkMine = false;
+      dispatch(incrementMines());
+    }
     dispatch(decrementAnswers());
     for (let i = 0; i < 8; i++) {
       let r1: number = r + dir[i][0];
@@ -114,6 +132,10 @@ export default function Game() {
         } else if (cp[r1][c1].mine > 0) {
           cp[r1][c1].explore = true;
           dispatch(decrementAnswers());
+          if (cp[r1][c1].checkMine) {
+            cp[r1][c1].checkMine = false;
+            dispatch(incrementMines());
+          }
         }
       }
     }
@@ -133,16 +155,25 @@ export default function Game() {
                   <div
                     key={indexCol}
                     className={classnames(
-                      'item', 'borderRightBottom',
-                      (indexRow === 0) ? 'borderTop' : '',
-                      (indexCol === 0) ? 'borderLeft' : '',
-                      (arr[indexRow][indexCol].explore) ? 'gray' : '',
-                      (arr[indexRow][indexCol].checkMine) ? 'red' : '',
+                      'item',
+                      ((indexRow !== rows - 1) && (indexCol !== columns - 1))
+                        ? 'borderRightBottom' : '',
+                      ((indexRow === rows - 1) && (indexCol !== columns -1))
+                        ? 'borderRight' : '',
+                      ((indexRow !== rows - 1) && (indexCol === columns -1))
+                        ? 'borderBottom' : '',
+                      ((result !== -1) && arr[indexRow][indexCol].explore) ? 'gray' : '',
+                      ((result !== -1) && arr[indexRow][indexCol].checkMine) ? 'red' : '',
+                      ((result === -1) && arr[indexRow][indexCol].mine !== -1) ? 'gray' : '',
+                      ((result === -1) && arr[indexRow][indexCol].mine === -1) ? 'red' : '',
                     )}
                     onClick={() => handleClick(indexRow, indexCol)}
                     onContextMenu={(e) => handleRightClick(e, indexRow, indexCol)}
                   >
-                    {arr[indexRow][indexCol].mine}
+                    {((result === -1) || (
+                        arr[indexRow][indexCol].explore && (arr[indexRow][indexCol].mine > 0)))
+                      && (arr[indexRow][indexCol].mine > 0) 
+                    && arr[indexRow][indexCol].mine}
                   </div>
                 )
               })
@@ -150,9 +181,6 @@ export default function Game() {
           </div>
         )
       })}
-      <button onClick={() => console.log(mines)}>
-        sd
-      </button>
     </div>
   )
 }

@@ -1,75 +1,139 @@
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: red;
-  color: white
+$gray: gray;
+$border: 1px solid white;
+$boldBorder: 3px solid white;
+
+body {
+  margin: 0;
+  padding: 0;
 }
 
-.game {
+.main {
   background-color: black;
+  color: white;
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  .row {
-    display: flex;
-    .item {
-      width: 5vh;
-      height: 5vh;
-      font-size: 3.2vh;
-    }
-    .borderRightBottom {
-      border-right: 1px solid white;
-      border-Bottom: 1px solid white;
-    }
-    .borderTop {
-      border-top: 1px solid white;
-    }
-    .borderLeft {
-      border-left: 1px solid white;
-    }
-    .gray {
-      background-color: gray;
-    }
-    .red {
-      background-color: red;
-    }
-  }
-}
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  height: fit-content;
+  width: fit-content;
 
-.topbar {
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-}
+  .App {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-.setDifficulty {
-  position: fixed;
-  top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 30vh;
-  height: 30vh;
-  background-color: red;
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    background-color: gray;
-    height: 15%;
-    width: 100%;
-  }
-  .item {
-    display: flex;
-    width: 100%;
-    height: 15%;
-    .textarea {
-      resize: none;
-      height: 70%;
-      width: 20%;
+    .game {
+      display: flex;
+      flex-direction: column;
+      margin-top: 5vh;
+      border: $boldBorder;
+
+      .row {
+        display: flex;
+
+        .item {
+          width: 4vh;
+          height: 4vh;
+          font-size: 2.8vh;
+        }
+
+        .borderRightBottom {
+          border-right: $border;
+          border-Bottom: $border;
+        }
+
+        .borderRight {
+          border-right: $border;
+        }
+
+        .borderBottom {
+          border-bottom: $border;
+        }
+
+        .gray {
+          background-color:$gray;
+        }
+
+        .red {
+          background-color: red;
+        }
+      }
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-start;
+      width: 110vh;
+      height: 8vh;
+      background-color: $gray;
+      font-size: 5vh;
+      border: $boldBorder;
+
+
+      .title {
+        flex: 2;
+      }
+
+      .text {
+        flex: 1;
+      }
+
+      .button {
+        flex: 1;
+        cursor: pointer;
+      }
+
+      .boldBorderLeft {
+        border-left: $boldBorder;
+      }
+    }
+    
+    .setDifficulty {
+      position: fixed;
+      top: 30vh;
+      left: calc(50vw - 30vh / 2);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      width: 30vh;
+      height: 45vh;
+      background-color: black;
+      border: $boldBorder;
+      font-size: 3vh;
+      .top {
+        display: flex;
+        justify-content: flex-end;
+        background-color: gray;
+        height: 12%;
+        width: 100%;
+
+        .X {
+          width: 30%;
+        }
+      }
+      .item {
+        display: flex;
+        width: 100%;
+        height: 15%;
+        margin-top: 5%;
+        margin-left: 5%;
+
+        .textarea {
+          resize: none;
+          height: 50%;
+          width: 20%;
+          font-size: 2.5vh;
+        }
+      }
+      .buttonNewGame {
+        border: $border;
+        width: 45%;
+        margin-bottom: 5%;
+        margin-left: 5%;
+      }
     }
   }
 }
