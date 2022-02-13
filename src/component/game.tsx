@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   updateArr, incrementMines, decrementMines,
   incrementAnswers, decrementAnswers, switchResult, Square
-} from "./gameSlice";
-import { RootState } from "./store";
+} from "../app/gameSlice";
+import { RootState } from "../app/store";
 import classnames from 'classnames';
 import '../App.scss'
 

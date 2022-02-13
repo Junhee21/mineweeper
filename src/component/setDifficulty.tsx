@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { toggleSetDifficulty, newGame } from "./gameSlice";
+import { toggleSetDifficulty, newGame } from "../app/gameSlice";
 import '../App.scss'
 
 export default function SetDifficulty() {
   const dispatch = useDispatch();
   const [difficulty, setDifficulty] = useState("")
-  const [rows, setRows] = useState("20")
-  const [columns, setColumns] = useState("30")
-  const [startMines, setMines] = useState("145")
+  const [rows, setRows] = useState(20)
+  const [columns, setColumns] = useState(30)
+  const [startMines, setMines] = useState(145)
 
   const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -53,17 +53,25 @@ export default function SetDifficulty() {
           }))
         }));
       } else {
-        dispatch(newGame({
-          startMines: Number(startMines),
-          answers: Number(rows) * Number(columns),
-          rows: Number(rows),
-          columns: Number(columns),
-          arr: Array(Number(rows)).fill(Array(Number(columns)).fill({
-            explore: false,
-            checkMine: false,
-            mine: 0
-          }))
-        }));
+        if (startMines > rows * columns) {
+          alert("지뢰가 너무 많습니다");
+        } else if (isNaN(startMines) || isNaN(rows) || isNaN(columns)) {
+          alert("자연수 입력하시오");
+        } else if (startMines <= 0 || rows <= 0 || columns <= 0) {
+          alert("양수를 입력하시오");
+        } else {
+          dispatch(newGame({
+            startMines: startMines,
+            answers: rows * columns,
+            rows: rows,
+            columns: columns,
+            arr: Array(rows).fill(Array(columns).fill({
+              explore: false,
+              checkMine: false,
+              mine: 0
+            }))
+          }));
+        }
       }
       dispatch(toggleSetDifficulty())
     }
@@ -126,17 +134,17 @@ export default function SetDifficulty() {
         <textarea
           className='textarea'
           placeholder="세로"
-          onChange={(e) => setRows(e.target.value)}
+          onChange={(e) => setRows(Math.floor(Number(e.target.value)))}
         />
         <textarea
           className='textarea'
           placeholder="가로"
-          onChange={(e) => setColumns(e.target.value)}
+          onChange={(e) => setColumns(Math.floor(Number(e.target.value)))}
         />
         <textarea
           className='textarea'
           placeholder="지뢰"
-          onChange={(e) => setMines(e.target.value)}
+          onChange={(e) => setMines(Math.floor(Number(e.target.value)))}
         />
       </div>
       <div

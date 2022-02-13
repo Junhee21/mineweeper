@@ -76,4 +76,5 @@ export const {
   updateArr, decrementMines, incrementMines, decrementAnswers,
   incrementAnswers, toggleSetDifficulty, newGame, switchResult
 } = gameSlice.actions;
+
 export default gameSlice.reducer;

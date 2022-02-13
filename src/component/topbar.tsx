@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./store";
-import { toggleSetDifficulty, newGame } from "./gameSlice";
+import { RootState } from "../app/store";
+import { toggleSetDifficulty, newGame } from "../app/gameSlice";
 import classnames from 'classnames';
 import '../App.scss'
 
