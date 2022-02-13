@@ -13,11 +13,17 @@ export default function Topbar() {
   const nowMines = useSelector((state: RootState) => state.game.nowMines)
   const rows = useSelector((state: RootState) => state.game.rows)
   const columns = useSelector((state: RootState) => state.game.columns)
-  const [timer, setTimer] = useState(0);
-  const [cnt, setCnt] = useState(0);
+
+  const [timer, setTimer] = useState<number>(0); // clearInterval을 위해
+  const [cnt, setCnt] = useState<number>(0); // 1초마다 +1
 
   useEffect(() => {
+    /**
+     * result가 바뀌지 않아도 timer가 재시작되어야 할 때를 위해
+     *  ex) 새 게임 버튼을 누를 때
+     */
     clearInterval(timer);
+
     if (result === 0) {
       setCnt(0);
       var _timer : any = setInterval(() => setCnt(cnt => cnt+1), 1000);
@@ -48,6 +54,7 @@ export default function Topbar() {
       </div>
       <div
         className={classnames("button", "boldBorderLeft")}
+        // 현재 게임 정보(지뢰 개수, 판 크기)로 새 게임을 시작
         onClick={() => dispatch(newGame({
           startMines: startMines,
           answers: rows*columns,

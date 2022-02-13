@@ -5,11 +5,14 @@ import '../App.scss'
 
 export default function SetDifficulty() {
   const dispatch = useDispatch();
-  const [difficulty, setDifficulty] = useState("")
-  const [rows, setRows] = useState(20)
-  const [columns, setColumns] = useState(30)
-  const [startMines, setMines] = useState(145)
+  const [difficulty, setDifficulty] = useState<string>("")
 
+  // 사용자 설정 시 입력되는 값을 위한 state
+  const [rows, setRows] = useState<number>(20)
+  const [columns, setColumns] = useState<number>(30)
+  const [startMines, setMines] = useState<number>(145)
+
+  // 우클릭 disabled
   const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
   }
@@ -53,10 +56,17 @@ export default function SetDifficulty() {
           }))
         }));
       } else {
+
+        // 줄, 열, 지뢰 개수 입력시 발생 가능한 오류 처리
+        // 지뢰 개수가 칸 개수보다 많을 때
         if (startMines > rows * columns) {
           alert("지뢰가 너무 많습니다");
+
+        // 숫자가 아닐 때
         } else if (isNaN(startMines) || isNaN(rows) || isNaN(columns)) {
           alert("자연수 입력하시오");
+
+        // 양수가 아닐때
         } else if (startMines <= 0 || rows <= 0 || columns <= 0) {
           alert("양수를 입력하시오");
         } else {
@@ -92,6 +102,7 @@ export default function SetDifficulty() {
       </div>
       <div className="item">
         <input
+          className="radioButton"
           type="radio"
           name="radio"
           onChange={(() => setDifficulty("쉬움"))}
@@ -102,6 +113,7 @@ export default function SetDifficulty() {
       </div>
       <div className="item">
         <input
+          className="radioButton"
           type="radio"
           name="radio"
           onChange={(() => setDifficulty("보통"))}
@@ -112,6 +124,7 @@ export default function SetDifficulty() {
       </div>
       <div className="item">
         <input
+          className="radioButton"
           type="radio"
           name="radio"
           onChange={(() => setDifficulty("어려움"))}
@@ -122,6 +135,7 @@ export default function SetDifficulty() {
       </div>
       <div className="item">
         <input
+          className="radioButton"
           type="radio"
           name="radio"
           onChange={(() => setDifficulty("사용자 설정"))}

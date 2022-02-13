@@ -7,8 +7,8 @@ export const store = configureStore({
   },
 });
 
+// useSelector에서 state의 type설정을 위해
 export const rootReducer = combineReducers({
   game: gameReducer
 });
-
 export type RootState = ReturnType<typeof rootReducer>
