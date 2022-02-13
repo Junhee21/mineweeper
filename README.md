@@ -1,21 +1,18 @@
-https://redux-toolkit.js.org/introduction/getting-started
-npx create-react-app mineweeper --template redux-typescript 명령어로 설치
-
-
 # How to start
-### node_modules 존재
-npm start
+npm install
 
-### node_modules 부재
+npm start
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-# Deploy
+<br />
 
-[https://mineweeper.vercel.app/](https://mineweeper.vercel.app/) deploy by vercel
+# Deploy
+[https://mineweeper.vercel.app/](https://mineweeper.vercel.app) deploy by vercel
+
+<br />
 
 # Feature
-## React
-## Redux toolkit
-## Typescript
-## SCSS
+npx create-react-app mineweeper --template redux-typescript로 처음 빌드
+
+React, Redux-toolkit, Typescript, SCSS 사용
