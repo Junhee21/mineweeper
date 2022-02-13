@@ -8,7 +8,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 <br />
 
 # Deploy
-[https://mineweeper.vercel.app/](https://mineweeper.vercel.app) deploy by vercel
+[https://mineweeper.cookie-coffee.com](https://mineweeper.cookie-coffee.com) deploy by vercel
 
 <br />
 
